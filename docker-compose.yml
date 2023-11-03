@@ -13,8 +13,6 @@ x-nginx: &default-nginx
   <<: *default-commons
   build:
     context: .
-  networks:
-    - internal-stg-gateway
 
 services:
   nginx:
@@ -30,7 +28,3 @@ services:
       - "8088:80"
       - "9145:9145"
 
-networks:
-  internal-stg-gateway:
-    name: kino-backend-prod_internal-prod
-    external: true
