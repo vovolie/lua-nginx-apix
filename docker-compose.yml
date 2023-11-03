@@ -1,0 +1,36 @@
+x-logging: &default-logging
+  logging:
+    driver: "json-file"
+    options:
+      max-file: "10"
+      max-size: "10m"
+
+x-commons: &default-commons
+  <<: *default-logging
+  restart: always
+
+x-nginx: &default-nginx
+  <<: *default-commons
+  build:
+    context: .
+  networks:
+    - internal-stg-gateway
+
+services:
+  nginx:
+    <<: *default-nginx
+    environment:
+      - PARAM_ENCRYPT_KEY=1yOeMRFT6a
+      - LUA_DEBUG=true
+    volumes:
+      - ./nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
+      - ./conf:/etc/nginx/conf.d
+      - ./logs:/var/log/nginx
+    ports:
+      - "8088:80"
+      - "9145:9145"
+
+networks:
+  internal-stg-gateway:
+    name: kino-backend-prod_internal-prod
+    external: true
